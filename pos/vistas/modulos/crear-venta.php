@@ -82,36 +82,17 @@ if($_SESSION["perfil"] == "Especial"){
                     
                     <span class="input-group-addon"><i class="fa fa-key"></i></span>
 
+                    
                     <?php
-
                     $item = null;
                     $valor = null;
 
                     $ventas = ControladorVentas::ctrMostrarVentas($item, $valor);
-
-                    if(!$ventas){
-
-                      echo '<input type="text" class="form-control" id="nuevaVenta" name="nuevaVenta" value="10001" readonly>';
-                  
-
-                    }else{
-
-                      foreach ($ventas as $key => $value) {
-                        
-                        
-                      
-                      }
-
-                      $codigo = $value["codigo"] + 1;
-
-
-
-                      echo '<input type="text" class="form-control" id="nuevaVenta" name="nuevaVenta" value="'.$codigo.'" readonly>';
-                  
-
-                    }
-
                     ?>
+
+                    
+
+                       <input type="text" class="form-control" id="nuevaVenta" name="nuevaVenta" value="" placeholder="Ingrese el codigo de factura" required>
                     
                     
                   </div>
