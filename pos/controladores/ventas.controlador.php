@@ -29,6 +29,8 @@ class ControladorVentas{
 
 		if(isset($_POST["nuevaVenta"])){
 
+
+
 			/*=============================================
 			ACTUALIZAR LAS COMPRAS DEL CLIENTE Y REDUCIR EL STOCK Y AUMENTAR LAS VENTAS DE LOS PRODUCTOS
 			=============================================*/
@@ -126,6 +128,8 @@ class ControladorVentas{
 
 			if($respuesta == "ok"){
 
+				if(isset($_POST["impresion"])){
+
 				// $impresora = "epson20";
 
 				// $conector = new WindowsPrintConnector($impresora);
@@ -208,6 +212,7 @@ class ControladorVentas{
 
 				$printer -> close();
 
+			}
 	
 				echo'<script>
 

@@ -71,7 +71,7 @@ $bloque1 = <<<EOF
 				Fecha: $fecha
 
 				<br><br>
-				Inventory System
+				Fruty Cake
 				
 				<br>
 				NIT: 71.759.963-9
