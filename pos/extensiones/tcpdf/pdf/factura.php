@@ -1,229 +1,151 @@
 <?php
+//============================================================+
+// File name   : example_028.php
+// Begin       : 2008-03-04
+// Last Update : 2013-05-14
+//
+// Description : Example 028 for TCPDF class
+//               Changing page formats
+//
+// Author: Nicola Asuni
+//
+// (c) Copyright:
+//               Nicola Asuni
+//               Tecnick.com LTD
+//               www.tecnick.com
+//               info@tecnick.com
+//============================================================+
 
-require_once "../../../controladores/ventas.controlador.php";
-require_once "../../../modelos/ventas.modelo.php";
+/**
+ * Creates an example PDF TEST document using TCPDF
+ * @package com.tecnick.tcpdf
+ * @abstract TCPDF - Example: changing page formats
+ * @author Nicola Asuni
+ * @since 2008-03-04
+ */
 
-require_once "../../../controladores/clientes.controlador.php";
-require_once "../../../modelos/clientes.modelo.php";
-
-require_once "../../../controladores/usuarios.controlador.php";
-require_once "../../../modelos/usuarios.modelo.php";
-
-require_once "../../../controladores/productos.controlador.php";
-require_once "../../../modelos/productos.modelo.php";
-
-class imprimirFactura{
-
-public $codigo;
-
-public function traerImpresionFactura(){
-
-//TRAEMOS LA INFORMACIÓN DE LA VENTA
-
-$itemVenta = "codigo";
-$valorVenta = $this->codigo;
-
-$respuestaVenta = ControladorVentas::ctrMostrarVentas($itemVenta, $valorVenta);
-
-$fecha = substr($respuestaVenta["fecha"],0,-8);
-$productos = json_decode($respuestaVenta["productos"], true);
-$neto = number_format($respuestaVenta["neto"],2);
-$impuesto = number_format($respuestaVenta["impuesto"],2);
-$total = number_format($respuestaVenta["total"],2);
-
-//TRAEMOS LA INFORMACIÓN DEL CLIENTE
-
-$itemCliente = "id";
-$valorCliente = $respuestaVenta["id_cliente"];
-
-$respuestaCliente = ControladorClientes::ctrMostrarClientes($itemCliente, $valorCliente);
-
-//TRAEMOS LA INFORMACIÓN DEL VENDEDOR
-
-$itemVendedor = "id";
-$valorVendedor = $respuestaVenta["id_vendedor"];
-
-$respuestaVendedor = ControladorUsuarios::ctrMostrarUsuarios($itemVendedor, $valorVendedor);
-
-//REQUERIMOS LA CLASE TCPDF
-
+// Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
+// create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Nicola Asuni');
+$pdf->SetTitle('TCPDF Example 028');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+// remove default header/footer
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 
-$pdf->AddPage('P', 'A7');
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-//---------------------------------------------------------
+// set margins
+$pdf->SetMargins(10, PDF_MARGIN_TOP, 10);
 
-$bloque1 = <<<EOF
+// set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-<table style="font-size:9px; text-align:center">
+// set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-	<tr>
-		
-		<td style="width:160px;">
-	
-			<div>
-			
-				Fecha: $fecha
-
-				<br><br>
-				Fruty Cake
-				
-				<br>
-				NIT: 71.759.963-9
-
-				<br>
-				Dirección: Calle 44B 92-11
-
-				<br>
-				Teléfono: 300 786 52 49
-
-				<br>
-				FACTURA N.$valorVenta
-
-				<br><br>					
-				Cliente: $respuestaCliente[nombre]
-
-				<br>
-				Vendedor: $respuestaVendedor[nombre]
-
-				<br>
-
-			</div>
-
-		</td>
-
-	</tr>
-
-
-</table>
-
-EOF;
-
-$pdf->writeHTML($bloque1, false, false, false, false, '');
-
-// ---------------------------------------------------------
-
-
-foreach ($productos as $key => $item) {
-
-$valorUnitario = number_format($item["precio"], 2);
-
-$precioTotal = number_format($item["total"], 2);
-
-$bloque2 = <<<EOF
-
-<table style="font-size:9px;">
-
-	<tr>
-	
-		<td style="width:160px; text-align:left">
-		$item[descripcion] 
-		</td>
-
-	</tr>
-
-	<tr>
-	
-		<td style="width:160px; text-align:right">
-		$ $valorUnitario Und * $item[cantidad]  = $ $precioTotal
-		<br>
-		</td>
-
-	</tr>
-
-</table>
-
-EOF;
-
-$pdf->writeHTML($bloque2, false, false, false, false, '');
-
+// set some language-dependent strings (optional)
+if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
 }
 
 // ---------------------------------------------------------
 
-$bloque3 = <<<EOF
+$pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
 
-<table style="font-size:9px; text-align:right">
+// set font
+$pdf->SetFont('times', 'B', 20);
 
-	<tr>
-	
-		<td style="width:80px;">
-			 NETO: 
-		</td>
+//$pdf->AddPage('P', 'A4');
+//$pdf->Cell(0, 0, 'A4 PORTRAIT', 1, 1, 'C');
 
-		<td style="width:80px;">
-			$ $neto
-		</td>
+$pdf->AddPage('L', 'A4');
+$pdf->Cell(0, 0, 'A4 LANDSCAPE', 1, 1, 'C');
 
-	</tr>
+$pdf->AddPage('P', 'A5');
+$pdf->Cell(0, 0, 'A5 PORTRAIT', 1, 1, 'C');
 
-	<tr>
-	
-		<td style="width:80px;">
-			 IMPUESTO: 
-		</td>
+$pdf->AddPage('L', 'A5');
+$pdf->Cell(0, 0, 'A5 LANDSCAPE', 1, 1, 'C');
 
-		<td style="width:80px;">
-			$ $impuesto
-		</td>
+$pdf->AddPage('P', 'A6');
+$pdf->Cell(0, 0, 'A6 PORTRAIT', 1, 1, 'C');
 
-	</tr>
+$pdf->AddPage('L', 'A6');
+$pdf->Cell(0, 0, 'A6 LANDSCAPE', 1, 1, 'C');
 
-	<tr>
-	
-		<td style="width:160px;">
-			 --------------------------
-		</td>
+$pdf->AddPage('P', 'A7');
+$pdf->Cell(0, 0, 'A7 PORTRAIT', 1, 1, 'C');
 
-	</tr>
-
-	<tr>
-	
-		<td style="width:80px;">
-			 TOTAL: 
-		</td>
-
-		<td style="width:80px;">
-			$ $total
-		</td>
-
-	</tr>
-
-	<tr>
-	
-		<td style="width:160px;">
-			<br>
-			<br>
-			Muchas gracias por su compra
-		</td>
-
-	</tr>
-
-</table>
+$pdf->AddPage('L', 'A7');
+$pdf->Cell(0, 0, 'A7 LANDSCAPE', 1, 1, 'C');
 
 
+// --- test backward editing ---
 
-EOF;
 
-$pdf->writeHTML($bloque3, false, false, false, false, '');
+$pdf->setPage(1, true);
+$pdf->SetY(50);
+$pdf->Cell(0, 0, 'A4 test', 1, 1, 'C');
+
+$pdf->setPage(2, true);
+$pdf->SetY(50);
+$pdf->Cell(0, 0, 'A4 test', 1, 1, 'C');
+
+$pdf->setPage(3, true);
+$pdf->SetY(50);
+$pdf->Cell(0, 0, 'A5 test', 1, 1, 'C');
+
+$pdf->setPage(4, true);
+$pdf->SetY(50);
+$pdf->Cell(0, 0, 'A5 test', 1, 1, 'C');
+
+$pdf->setPage(5, true);
+$pdf->SetY(50);
+$pdf->Cell(0, 0, 'A6 test', 1, 1, 'C');
+
+$pdf->setPage(6, true);
+$pdf->SetY(50);
+$pdf->Cell(0, 0, 'A6 test', 1, 1, 'C');
+
+$pdf->setPage(7, true);
+$pdf->SetY(40);
+$pdf->Cell(0, 0, 'A7 test', 1, 1, 'C');
+
+$pdf->setPage(8, true);
+$pdf->SetY(40);
+$pdf->Cell(0, 0, 'A7 test', 1, 1, 'C');
+
+$pdf->lastPage();
 
 // ---------------------------------------------------------
+
+//Close and output PDF document
+//$pdf->Output('example_028.pdf', 'I');
+
+//============================================================+
+// END OF FILE
+//==========================================================
+
 //SALIDA DEL ARCHIVO 
 
 //$pdf->Output('factura.pdf', 'D');
 $pdf->Output('factura.pdf');
 
-}
 
-}
-
-$factura = new imprimirFactura();
+/*$factura = new imprimirFactura();
 $factura -> codigo = $_GET["codigo"];
-$factura -> traerImpresionFactura();
+$factura -> traerImpresionFactura();*/
+
 
 ?>

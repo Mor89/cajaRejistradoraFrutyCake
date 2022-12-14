@@ -53,7 +53,8 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 
 $pdf->startPageGroup();
 
-$pdf->AddPage();
+$pdf->AddPage('L', 'A4');
+
 
 // ---------------------------------------------------------
 
@@ -70,10 +71,15 @@ $bloque1 = <<<EOF
 				<div style="font-size:8.5px; text-align:right; line-height:15px;">
 					
 					<br>
-					NIT: 71.759.963-9
-
+					KM 8.5 CTON. PLANES DE RENDEROS
 					<br>
-					Dirección: Calle 44B 92-11
+					QUINTA LA PROVIDENCIA SAN SALVADOR 
+					<br>
+					pasteleriafrutycake@gmail.com
+					<br>
+					Tels: 2280-8833 / 7748-7906
+					
+
 
 				</div>
 
@@ -84,16 +90,15 @@ $bloque1 = <<<EOF
 				<div style="font-size:8.5px; text-align:right; line-height:15px;">
 					
 					<br>
-					Teléfono: 300 786 52 49
+					NIT: 0614-280382-108-0
 					
 					<br>
-					ventas@inventorysystem.com
-
+					REGISTRO N°: 292810-3
+					<br>
+					FACTURA N°.<br>$valorVenta
 				</div>
 				
 			</td>
-
-			<td style="background-color:white; width:110px; text-align:center; color:red"><br><br>FACTURA N.<br>$valorVenta</td>
 
 		</tr>
 
@@ -127,7 +132,7 @@ $bloque2 = <<<EOF
 
 			</td>
 
-			<td style="border: 1px solid #666; background-color:white; width:150px; text-align:right">
+			<td style="border: 1px solid #666; background-color:white; width:250px; text-align:right">
 			
 				Fecha: $fecha
 
